@@ -1,0 +1,24 @@
+body{
+    margin: 0.5rem;
+    padding: 1rem;
+}
+
+.heading {
+    color: rgb(18, 173, 204);
+    font-weight: bold;
+}
+
+.currency_field
+{
+    
+    padding: 1rem;
+    vertical-align: middle;
+    background-color: rgb(18, 173, 204);
+    height: 100px;
+    font-size: large;
+    font-weight: bold;
+}   
+
+.buttons {
+    margin-left: 13rem;
+}

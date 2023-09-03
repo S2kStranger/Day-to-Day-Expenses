@@ -1,0 +1,33 @@
+body{
+    padding: 10px;
+    background-image: url("Images/signUp.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+p
+{
+    line-height: 1rem;
+}
+
+.information {
+    line-height: 50%;
+    font-size: large;
+}
+
+.heading {
+    margin-bottom: 2rem;
+}
+
+.btn
+{
+    width: 50%;
+}
+
+.extrabtn{
+    width:25%;
+}
+
+
+
