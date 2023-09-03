@@ -1,0 +1,23 @@
+body 
+{
+    padding: 2%;
+}
+
+.btn
+{
+    width: 280%;
+}
+
+p
+{
+    line-height: 1rem;
+}
+
+.information {
+    line-height: 50%;
+    font-size: large;
+}
+
+.heading {
+    margin-bottom: 2rem;
+}

@@ -20,7 +20,7 @@ myform.addEventListener('submit', async(e) => {
         }
 
         const result = await axios.post("http://localhost:4000/postsignupdata",obj_data);
-        errortext.value="";
+        errortext.value=""; 
         console.log(result);
 
     }catch(error){
