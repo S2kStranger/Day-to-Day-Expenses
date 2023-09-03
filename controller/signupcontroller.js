@@ -1,13 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
+
+const userTable = require('../models/tableUser');
 
 exports.postUser = (req,res,next) => {
 
-    try{
-        res.status(200).json({result : res.body});
-    }catch(err){
-        res.status(500).json({error: err});
-    }
+    userTable.create({
+        Profile_name : req.body.pname,
+        Profile_purpose : req.body.ppurpose,
+        Email : req.body.pemail,
+        Password : req.body.ppassword,
+        Information : req.body.pinformation
+    })
+    .then(result => {
+        res.status(200).json({result : result});
+    })
+    .catch(err => {
+        res.status(450).json({error : err});
+    })
+
 
 }

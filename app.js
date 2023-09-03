@@ -14,8 +14,8 @@ app.use(index);
 const sequelize = require('./util/database');
 
 sequelize
-    .sync({force:true})
-   // .sync()
+    //.sync({force:true})
+    .sync()
     .then(result => {
         app.listen(4000);
         console.log(result);

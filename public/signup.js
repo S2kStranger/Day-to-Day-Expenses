@@ -5,6 +5,7 @@ var email = document.getElementById('email');
 var password = document.getElementById('password');
 var information = document.getElementById('information');
 var btnsignup= document.getElementById('btnsignup');
+var errortext = document.getElementById('error');
 
 myform.addEventListener('submit', async(e) => {
     e.preventDefault();
@@ -19,11 +20,11 @@ myform.addEventListener('submit', async(e) => {
         }
 
         const result = await axios.post("http://localhost:4000/postsignupdata",obj_data);
-        myform.reset();
+        errortext.value="";
         console.log(result);
 
     }catch(error){
-        document.body.innerHTML = document.body.innerHTML+'<h4>Something went wrong</h4>';
-        console.log(error);
+       errortext.value = 'User already Exists.';
     }
+    myform.reset();
 })
