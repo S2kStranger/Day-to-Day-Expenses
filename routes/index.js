@@ -20,10 +20,10 @@ router.get('/signIn',(req,res,next) => {
     res.sendFile(path.join(__dirname,'..','views','signIn.html'));
 })
 
+// router.get('/home',(req,res,next) => {
+//     res.sendFile(path.join(__dirname,'..','views','home.html'));
+// })
+
 router.post('/signIn',signIncontroller.loggingIn);
-
-
-
-
 
 module.exports=router;
