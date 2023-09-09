@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const userTable = require('../models/tableUser');
 
 exports.loggingIn = (req,res,next) => {
+    console.log("Eneterd in logging in");
     const email = req.body.useremail;
     userTable.findOne({where: {Email : email}})
     .then(record => {
@@ -14,7 +15,9 @@ exports.loggingIn = (req,res,next) => {
             if(pmatch)
             {
                 console.log("Password matched");
-                 res.sendFile(path.join(__dirname,'..','views','home.html'));
+                console.log(record);
+                //res.send(record);
+                res.status(200).json({record:record});
             }
             else
             {

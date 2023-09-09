@@ -12,14 +12,15 @@ exports.postUser = (req,res,next) => {
     try{
         bcrypt.hash(pwd,salt, async(err,hash) => {
             console.log("Hash",hash);
-            await userTable.create({
+           const result = await userTable.create({
                 Profile_name : req.body.pname,
                 Profile_purpose : req.body.ppurpose,
                 Email : req.body.pemail,
                 Password : hash,
                 Information : req.body.pinformation
             })
-            res.sendFile(path.join(__dirname,'..','views','signIn.html'));
+            //return res.sendFile(path.join(__dirname,'..','views','signIn.html'));
+             res.status(200).json({result:result});
         })
     }catch(err)
     {

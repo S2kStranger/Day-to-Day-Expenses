@@ -21,7 +21,12 @@ myform.addEventListener('submit', async(e) => {
 
         const result = await axios.post("http://localhost:4000/postsignupdata",obj_data);
         errortext.value=""; 
-        console.log(result);
+        if(result)
+        {
+            console.log("Success");
+            //window.location.href = "/signIn";
+            location.replace("/signIn");
+        }
 
     }catch(error){
        errortext.value = 'User already Exists.';
