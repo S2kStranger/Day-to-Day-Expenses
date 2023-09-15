@@ -8,6 +8,8 @@ var t_body = document.getElementById("tablebody");
 var btnincome = document.getElementById('btn_income');
 var txtincome = document.getElementById('income');
 
+var btnlogout = document.getElementById('btnlogout');
+
 
 btnincome.addEventListener('click',(e) => 
 {
@@ -29,7 +31,8 @@ window.addEventListener('DOMContentLoaded',async (e) => {
   e.preventDefault();
   try
   {
-    const result = await axios.get("http://localhost:4000/account/getexpenses");
+    const token = localStorage.getItem("token");
+    const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
     for(var i =0;i<result.data.allexpenses.length;i++)
         {
             //console.log(result.data.allexpenses[i]);
@@ -81,7 +84,8 @@ function addInTable(obj) {
   delbtn.addEventListener('click',(e) => {
     e.preventDefault();
 
-    axios.delete(`http://localhost:4000/account/deleteExpense/${expenseid}`)
+    const token = localStorage.getItem('token');
+    axios.delete(`http://localhost:4000/account/deleteExpense/${expenseid}`,{headers:{"Authorization":token}})
       .then(result => {
         tr.remove();
       })
@@ -104,7 +108,8 @@ myform.addEventListener("submit", async (e) => {
       description: edescription.value,
     };
 
-    const newData = await axios.post("http://localhost:4000/postnewexpense",obj_data);
+    const token = localStorage.getItem('token');
+    const newData = await axios.post("http://localhost:4000/postnewexpense",obj_data,{headers:{"Authorization":token}});
     const ret_data = newData.data.expensedata;
 
     addInTable(ret_data);
@@ -115,6 +120,12 @@ myform.addEventListener("submit", async (e) => {
   }
 });
 
+
+btnlogout.addEventListener('click',(e) => {
+  e.preventDefault();
+  localStorage.clear();
+  location.replace("/signIn");
+})
 
 
 

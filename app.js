@@ -14,6 +14,11 @@ app.use(index);
 
 const sequelize = require('./util/database');
 
+const usertable = require('./models/tableUser');
+const expensetable = require('./models/tableExpense');
+
+usertable.hasMany(expensetable);
+expensetable.belongsTo(usertable);
 sequelize
     //.sync({force:true})
     .sync()

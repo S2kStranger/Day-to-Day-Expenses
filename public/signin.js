@@ -13,6 +13,9 @@ myform.addEventListener('submit',(e)=> {
         }
         axios.post("http://localhost:4000/signIn",obj_data)
         .then(result => {
+             const ret=result.data.token;
+             localStorage.setItem("token",ret);
+            //console.log("Logged ID: "+result.data.record.id);
             console.log("Account verified");
             //const obj=JSON.parse(JSON.stringify(result));
             console.log("Result is:"+result);
