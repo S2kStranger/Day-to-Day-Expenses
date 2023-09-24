@@ -15,10 +15,15 @@ myform.addEventListener('submit',(e)=> {
         .then(result => {
              const ret=result.data.token;
              localStorage.setItem("token",ret);
-             localStorage.setItem("isPremium",result.data.record.isPremium);
+            //console.log("Logged ID: "+result.data.record.id);
+            console.log("Account verified");
+            //const obj=JSON.parse(JSON.stringify(result));
+            console.log("Result is:"+result);
             location.replace("/account");
         })
         .catch(error => {
+            console.log(error);
+            console.log(error.response.data.error);
             errortext.value = error.response.data.error;
         })
        
