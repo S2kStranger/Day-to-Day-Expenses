@@ -17,7 +17,8 @@ exports.postUser = (req,res,next) => {
                 Profile_purpose : req.body.ppurpose,
                 Email : req.body.pemail,
                 Password : hash,
-                Information : req.body.pinformation
+                Information : req.body.pinformation,
+                isPremium : req.body.isPremium
             })
             //return res.sendFile(path.join(__dirname,'..','views','signIn.html'));
              res.status(200).json({result:result});

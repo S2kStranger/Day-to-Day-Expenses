@@ -29,7 +29,9 @@ const userData = sequelize.define('users',{
         allowNull: false
     },
 
-    Information: Sequelize.STRING
+    Information: Sequelize.STRING,
+
+    isPremium: Sequelize.BOOLEAN
 
 })
 
