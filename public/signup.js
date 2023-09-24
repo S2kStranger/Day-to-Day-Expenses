@@ -16,15 +16,14 @@ myform.addEventListener('submit', async(e) => {
             ppurpose : purpose.value,
             pemail : email.value,
             ppassword : password.value,
-            pinformation : information.value
+            pinformation : information.value,
+            isPremium : 'false'
         }
 
         const result = await axios.post("http://localhost:4000/postsignupdata",obj_data);
         errortext.value=""; 
         if(result)
         {
-            console.log("Success");
-            //window.location.href = "/signIn";
             location.replace("/signIn");
         }
 

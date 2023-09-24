@@ -7,8 +7,8 @@ var t_body = document.getElementById("tablebody");
 
 var btnincome = document.getElementById('btn_income');
 var txtincome = document.getElementById('income');
-
 var btnlogout = document.getElementById('btnlogout');
+var btnpremium = document.getElementById('premium');
 
 
 btnincome.addEventListener('click',(e) => 
@@ -32,10 +32,15 @@ window.addEventListener('DOMContentLoaded',async (e) => {
   try
   {
     const token = localStorage.getItem("token");
+    const premiumUser = localStorage.getItem("isPremium");
+    if(premiumUser=="true")
+    {
+      btnpremium.innerHTML = "Premium User";
+      btnpremium.disabled=true;
+    }
     const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
     for(var i =0;i<result.data.allexpenses.length;i++)
         {
-            //console.log(result.data.allexpenses[i]);
             addInTable(result.data.allexpenses[i]);
         }
   }catch(error){
@@ -127,6 +132,39 @@ btnlogout.addEventListener('click',(e) => {
   location.replace("/signIn");
 })
 
+
+btnpremium.onclick = async function(e) 
+{
+  const token = localStorage.getItem('token');
+  const response = await axios.get("http://localhost:4000/purchase/premium_membership",{headers:{"Authorization":token}});
+  
+  var options = 
+  {
+    "key" : response.data.key_id,
+    "order_id" : response.data.order.id,
+    "handler" : async function(response) {
+      await axios.post('http://localhost:4000/purchase/updatetransactionstatus',{
+        order_id: options.order_id,
+        payment_id : response.razorpay_payment_id},{headers : {"Authorization": token}})
+        alert('You are a premium user now');
+        localStorage.setItem('isPremium',true);
+        location.reload();
+    }
+  }
+  
+  const rzp1 = new Razorpay(options);
+  rzp1.open();
+  e.preventDefault();
+
+  rzp1.on('payment.failed',function(response) {
+    axios.post('http://localhost:4000/purchase/failedtransaction',{
+      order_id: options.order_id})
+    .then(() => {
+      alert("Payment could not process, try again!");
+    })
+    .catch((err) => {console.log(err)});
+  })
+}
 
 
 
