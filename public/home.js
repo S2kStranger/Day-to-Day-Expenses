@@ -9,6 +9,8 @@ var btnincome = document.getElementById('btn_income');
 var txtincome = document.getElementById('income');
 var btnlogout = document.getElementById('btnlogout');
 var btnpremium = document.getElementById('premium');
+var lb = document.getElementById('leaderboard');
+var lbt_body = document.getElementById('lbtablebody');
 
 
 btnincome.addEventListener('click',(e) => 
@@ -37,6 +39,8 @@ window.addEventListener('DOMContentLoaded',async (e) => {
     {
       btnpremium.innerHTML = "Premium User";
       btnpremium.disabled=true;
+      
+      premiumFeature();
     }
     const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
     for(var i =0;i<result.data.allexpenses.length;i++)
@@ -49,6 +53,46 @@ window.addEventListener('DOMContentLoaded',async (e) => {
   }
   
 })
+
+
+//adding premium feature
+async function premiumFeature()
+{
+  console.log("Calling premium feature");
+  lb.style.visibility='visible';
+
+ 
+    
+    const lbdata = await axios.get("http://localhost:4000/account/premium/getfeature");
+    console.log("first data "+ lbdata.data.lbobj);
+    for(var i=0;i<lbdata.data.lbobj.length;i++)
+    {
+      const record = lbdata.data.lbobj[i];
+      addInFeatureTable(record,i+1);
+    }
+}
+
+function addInFeatureTable(record,i)
+{
+  console.log(record);
+  const pname = record.Profile_name;
+  const texpense = record.total_expense;
+  var tr = document.createElement("tr");
+  lbt_body.appendChild(tr);
+
+  var th = document.createElement("th");
+  th.appendChild(document.createTextNode(i));
+  tr.appendChild(th);
+
+  var td_name = document.createElement("td");
+  td_name.appendChild(document.createTextNode(pname));
+  tr.appendChild(td_name);
+
+  var td_texpense = document.createElement("td");
+  td_texpense.appendChild(document.createTextNode(texpense));
+  tr.appendChild(td_texpense);
+
+}
 
 function addInTable(obj) {
   const amt = obj.amount;
@@ -93,6 +137,7 @@ function addInTable(obj) {
     axios.delete(`http://localhost:4000/account/deleteExpense/${expenseid}`,{headers:{"Authorization":token}})
       .then(result => {
         tr.remove();
+        location.reload();
       })
       .catch(error => {
             document.body.innerHTML = document.body.innerHTML+'<h4>Something went wrong</h4>';
@@ -120,6 +165,8 @@ myform.addEventListener("submit", async (e) => {
     addInTable(ret_data);
 
     myform.reset();
+    
+    location.reload();
   } catch (err) {
     document.body.innerHTML = document.body.innerHTML+"<h1>Something went wrong</h1>";
   }

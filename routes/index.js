@@ -34,4 +34,6 @@ router.get("/account/getexpenses",userauthorization.authorization,expenseControl
 
 router.delete("/account/deleteExpense/:e_id",userauthorization.authorization,expenseController.deleteexpense);
 
+router.get('/account/premium/getfeature',expenseController.getLeaderboard);
+
 module.exports=router;
