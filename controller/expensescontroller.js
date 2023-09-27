@@ -47,7 +47,7 @@ exports.getLeaderboard = async (req, res, next) => {
   //Using join
   try {
     const [results, metadata] = await sequelize.query(
-      "select userId,sum(amount) as total_expense,Profile_name from expenses LEFT JOIN users on expenses.userId=users.id group by userId;"
+      "select userId,sum(amount) as total_expense,Profile_name from daytodayexpense.expenses LEFT JOIN daytodayexpense.users on daytodayexpense.expenses.userId=daytodayexpense.users.id group by userId order by total_expense desc;"
     );
 
     const obj = JSON.stringify(results, null, 2);
