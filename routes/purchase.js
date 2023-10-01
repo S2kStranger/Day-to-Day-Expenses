@@ -14,5 +14,7 @@ router.post("/purchase/updatetransactionstatus",userauthorization.authorization,
 
 router.post("/purchase/failedtransaction",purchaseController.failedTransaction);
 
+router.get('/account/premium/getfeature',purchaseController.getLeaderboard);
+
 
 module.exports=router;

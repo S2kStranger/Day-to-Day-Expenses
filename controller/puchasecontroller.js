@@ -1,6 +1,7 @@
 const ordertable = require("../models/orders");
 require("dotenv").config();
 const Razorpay = require("razorpay");
+const userTable = require("../models/tableUser");
 
 exports.purchasePremium = (req, res, next) => {
   try {
@@ -62,4 +63,68 @@ exports.failedTransaction = async (req, res, next) => {
   } catch (err) {
     res.status(403).json({ message: "Something went wrong", error: err });
   }
+};
+
+
+exports.getLeaderboard = async (req, res, next) => {
+  //Using join
+  try {
+
+    //directly calling data from usertable
+
+    const results = await userTable.findAll({
+      attributes:['Profile_name','Total_Expense'],
+      order:[['Total_Expense','DESC']]
+    })
+
+
+    // //Using join using sequelize
+    // const results = await userTable.findAll({
+    //   attributes: ['id','Profile_name', [sequelize.fn('sum',sequelize.col('expenses.amount')),'total_expense']],
+    //   include : [
+    //     {
+    //       model: expenseTable,
+    //       attributes:[] 
+    //     }
+    //   ],
+    //   group:['users.id'],
+    //   order:[['total_expense','DESC']]
+    // })
+
+    // //Use join using SQL query
+    // const [results, metadata] = await sequelize.query(
+    //   "select daytodayexpense.users.id,Profile_name,userID,sum(amount) as total_expense from daytodayexpense.users LEFT JOIN daytodayexpense.expenses on daytodayexpense.users.id=daytodayexpense.expenses.userId group by daytodayexpense.users.id order by total_expense desc;"
+    // );
+    console.log(results);
+    res.status(200).json({ lbobj: results });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+
+  // //Using simple queries and sending to tables
+  //   try {
+  //     console.log("On glb");
+  //     const users = await expenseTable.findAll({
+  //       attributes: [ "userId", [sequelize.fn("sum", sequelize.col("amount")), "total_expense"]],
+  //       group: ["userId"],
+  //       order: [["total_expense","desc"]]
+  //     });
+  //     const names = await userTable.findAll({
+  //       attributes: ["id", "Profile_name"],
+  //     });
+  //     console.log(users);
+  //     console.log(names);
+
+  //     var arr=[];
+  //     users.forEach((element) => {
+  //           console.log("element id "+element.total_expense);
+  //           var obj = {name: names[element.userId-1].Profile_name,texpense:element.total_expense}
+  //           console.log("printing obj: name:"+obj.name+" and texpense: "+obj.texpense);
+  //           arr.push(obj);
+  //     })
+
+  //     return res.status(200).json({ userarr: users, namesarr: names });
+  //   } catch (err) {
+  //     res.status(400).json({ message: err });
+  //   }
 };

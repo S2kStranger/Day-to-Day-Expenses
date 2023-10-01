@@ -31,7 +31,13 @@ const userData = sequelize.define('users',{
 
     Information: Sequelize.STRING,
 
-    isPremium: Sequelize.BOOLEAN
+    isPremium: Sequelize.BOOLEAN,
+
+    Total_Expense : {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+        defaultValue: 0
+    }
 
 })
 

@@ -11,6 +11,7 @@ var btnlogout = document.getElementById('btnlogout');
 var btnpremium = document.getElementById('premium');
 var lb = document.getElementById('leaderboard');
 var lbt_body = document.getElementById('lbtablebody');
+var tot_expense = document.getElementById('texpense');
 
 
 btnincome.addEventListener('click',(e) => 
@@ -43,6 +44,9 @@ window.addEventListener('DOMContentLoaded',async (e) => {
       premiumFeature();
     }
     const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
+    
+     tot_expense.value = result.data.totexpense[0].Total_Expense;
+    
     for(var i =0;i<result.data.allexpenses.length;i++)
         {
             addInTable(result.data.allexpenses[i]);
@@ -60,9 +64,6 @@ async function premiumFeature()
 {
   console.log("Calling premium feature");
   lb.style.visibility='visible';
-
- 
-    
     const lbdata = await axios.get("http://localhost:4000/account/premium/getfeature");
     console.log("first data "+ lbdata.data.lbobj);
     for(var i=0;i<lbdata.data.lbobj.length;i++)
@@ -74,9 +75,10 @@ async function premiumFeature()
 
 function addInFeatureTable(record,i)
 {
+  console.log("Records fetched");
   console.log(record);
   const pname = record.Profile_name;
-  const texpense = record.total_expense==null?0:record.total_expense;
+  const texpense = record.Total_Expense==null?0:record.Total_Expense;
   var tr = document.createElement("tr");
   lbt_body.appendChild(tr);
 
@@ -99,6 +101,7 @@ function addInTable(obj) {
   const category = obj.category;
   const description = obj.description;
   const expenseid=obj.id;
+  
 
   //Adding data in table
 
@@ -130,6 +133,8 @@ function addInTable(obj) {
   t_id.classList.add('tdid');
   tr.appendChild(t_id);
 
+
+
   delbtn.addEventListener('click',(e) => {
     e.preventDefault();
 
@@ -155,14 +160,14 @@ myform.addEventListener("submit", async (e) => {
     const obj_data = {
       amount: expenseamount.value,
       category: ecategory.value,
-      description: edescription.value,
+      description: edescription.value
     };
 
     const token = localStorage.getItem('token');
     const newData = await axios.post("http://localhost:4000/postnewexpense",obj_data,{headers:{"Authorization":token}});
     const ret_data = newData.data.expensedata;
 
-    addInTable(ret_data);
+    //addInTable(ret_data);
 
     myform.reset();
     

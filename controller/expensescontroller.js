@@ -4,95 +4,99 @@ const expenseTable = require("../models/tableExpense");
 const userTable = require("../models/tableUser");
 const sequelize = require("../util/database");
 
-exports.postExpense = (req, res, next) => {
-  expenseTable
-    .create({
+exports.postExpense = async (req, res, next) => {
+
+  try{
+    const result = await  expenseTable.create({
       amount: req.body.amount,
       category: req.body.category,
       description: req.body.description,
       userId: req.user.id,
     })
-    .then((result) => {
-      res.status(200).json({ expensedata: result });
-    });
-};
 
-exports.getallExpenses = (req, res, next) => {
-  expenseTable
-    .findAll({ where: { userId: req.user.id } })
-    .then((expenses) => {
-      res.status(200).json({ allexpenses: expenses });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
-};
+    const reqRecord = await userTable.findOne({where: {id:req.user.id}});
+    const val = parseFloat(reqRecord.Total_Expense,10)+parseFloat(req.body.amount,10);
+    await reqRecord.update({Total_Expense:val});
+    res.status(200).json({ expensedata: result });
 
-exports.deleteexpense = (req, res, next) => {
-  const expenseid = req.params.e_id;
-  expenseTable
-    .findAll({ where: { userId: req.user.id, id: expenseid } })
-    .then((expense) => {
-      return expense[0].destroy();
-    })
-    .then((result) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err });
-    });
-};
-
-exports.getLeaderboard = async (req, res, next) => {
-  //Using join
-  try {
-
-    const results = await userTable.findAll({
-      attributes: ['id','Profile_name', [sequelize.fn('sum',sequelize.col('expenses.amount')),'total_expense']],
-      include : [
-        {
-          model: expenseTable,
-          attributes:[] 
-        }
-      ],
-      group:['users.id'],
-      order:[['total_expense','DESC']]
-    })
-
-
-    // const [results, metadata] = await sequelize.query(
-    //   "select daytodayexpense.users.id,Profile_name,userID,sum(amount) as total_expense from daytodayexpense.users LEFT JOIN daytodayexpense.expenses on daytodayexpense.users.id=daytodayexpense.expenses.userId group by daytodayexpense.users.id order by total_expense desc;"
-    // );
-    console.log(results);
-    return res.status(200).json({ lbobj: results });
-  } catch (err) {
-    res.status(400).json({ message: err });
+  }catch(err)
+  {
+    res.status(500).json({ error: err });
   }
 
-  // //Using simple queries and sending to tables
-  //   try {
-  //     console.log("On glb");
-  //     const users = await expenseTable.findAll({
-  //       attributes: [ "userId", [sequelize.fn("sum", sequelize.col("amount")), "total_expense"]],
-  //       group: ["userId"],
-  //       order: [["total_expense","desc"]]
-  //     });
-  //     const names = await userTable.findAll({
-  //       attributes: ["id", "Profile_name"],
-  //     });
-  //     console.log(users);
-  //     console.log(names);
 
-  //     var arr=[];
-  //     users.forEach((element) => {
-  //           console.log("element id "+element.total_expense);
-  //           var obj = {name: names[element.userId-1].Profile_name,texpense:element.total_expense}
-  //           console.log("printing obj: name:"+obj.name+" and texpense: "+obj.texpense);
-  //           arr.push(obj);
-  //     })
+  // expenseTable
+  //   .create({
+  //     amount: req.body.amount,
+  //     category: req.body.category,
+  //     description: req.body.description,
+  //     userId: req.user.id,
+  //   })
+  //   .then((result) => {
+  //     res.status(200).json({ expensedata: result });
+  //   });
+};
 
-  //     return res.status(200).json({ userarr: users, namesarr: names });
-  //   } catch (err) {
-  //     res.status(400).json({ message: err });
-  //   }
+exports.getallExpenses = async (req, res, next) => {
+
+  try
+  {
+    const expenses = await  expenseTable.findAll({ where: { userId: req.user.id } });
+    console.log(expenses);
+    const texpense = await userTable.findAll({
+      attributes:['Total_Expense'],
+      where: { id: req.user.id }
+    })
+    console.log(texpense);
+    res.status(200).json({ allexpenses: expenses , totexpense: texpense});
+  }catch(err)
+  {
+    res.status(500).json({ error: err });
+  }
+  // expenseTable
+  //   .findAll({ where: { userId: req.user.id } })
+  //   .then((expenses) => {
+  //     res.status(200).json({ allexpenses: expenses });
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).json({ error: err });
+  //   });
+};
+
+exports.deleteexpense = async (req, res, next) => {
+
+  try
+  {
+    const expenseid = req.params.e_id;
+    const expense = await  expenseTable.findOne({ where: { userId: req.user.id, id: expenseid } });
+    const reqRecord = await userTable.findOne({where:{id:req.user.id}});
+    var val =parseFloat(reqRecord.Total_Expense,10)-parseFloat(expense.amount,10);
+    const p1 = await reqRecord.update({Total_Expense:val});
+    const p2=await expense.destroy();
+    Promise.all([expense,reqRecord,p1,p2])
+      .then(() => {
+        res.sendStatus(200);
+      })
+      .catch((err) => {
+        res.status(500).json({error: err});
+      })
+
+    }catch(err)
+      {
+        res.status(500).json({ error: err });
+      }
+
+  // expenseTable
+  //   .findAll({ where: { userId: req.user.id, id: expenseid } })
+  //   .then((expense) => {
+  //     console.log("deleted");
+  //     console.log(expense);
+  //     return expense[0].destroy();
+  //   })
+  //   .then((result) => {
+  //     res.sendStatus(200);
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).json({ error: err });
+  //   });
 };
