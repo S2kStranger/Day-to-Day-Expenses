@@ -76,7 +76,7 @@ function addInFeatureTable(record,i)
 {
   console.log(record);
   const pname = record.Profile_name;
-  const texpense = record.total_expense;
+  const texpense = record.total_expense==null?0:record.total_expense;
   var tr = document.createElement("tr");
   lbt_body.appendChild(tr);
 

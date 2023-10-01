@@ -46,11 +46,23 @@ exports.deleteexpense = (req, res, next) => {
 exports.getLeaderboard = async (req, res, next) => {
   //Using join
   try {
-    const [results, metadata] = await sequelize.query(
-      "select userId,sum(amount) as total_expense,Profile_name from daytodayexpense.expenses LEFT JOIN daytodayexpense.users on daytodayexpense.expenses.userId=daytodayexpense.users.id group by userId order by total_expense desc;"
-    );
 
-    const obj = JSON.stringify(results, null, 2);
+    const results = await userTable.findAll({
+      attributes: ['id','Profile_name', [sequelize.fn('sum',sequelize.col('expenses.amount')),'total_expense']],
+      include : [
+        {
+          model: expenseTable,
+          attributes:[] 
+        }
+      ],
+      group:['users.id'],
+      order:[['total_expense','DESC']]
+    })
+
+
+    // const [results, metadata] = await sequelize.query(
+    //   "select daytodayexpense.users.id,Profile_name,userID,sum(amount) as total_expense from daytodayexpense.users LEFT JOIN daytodayexpense.expenses on daytodayexpense.users.id=daytodayexpense.expenses.userId group by daytodayexpense.users.id order by total_expense desc;"
+    // );
     console.log(results);
     return res.status(200).json({ lbobj: results });
   } catch (err) {
