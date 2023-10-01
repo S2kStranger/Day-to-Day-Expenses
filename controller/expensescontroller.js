@@ -6,21 +6,24 @@ const sequelize = require("../util/database");
 
 exports.postExpense = async (req, res, next) => {
 
+  const t =await  sequelize.transaction();
   try{
+    
     const result = await  expenseTable.create({
       amount: req.body.amount,
       category: req.body.category,
       description: req.body.description,
       userId: req.user.id,
-    })
+    },{transaction:t});
 
-    const reqRecord = await userTable.findOne({where: {id:req.user.id}});
-    const val = parseFloat(reqRecord.Total_Expense,10)+parseFloat(req.body.amount,10);
-    await reqRecord.update({Total_Expense:val});
+    const val = Number(req.user.Total_Expense)+Number(req.body.amount);
+    await userTable.update({Total_Expense:val},{where:{id:req.user.id},transaction:t});
+    await t.commit();
     res.status(200).json({ expensedata: result });
 
   }catch(err)
   {
+     await t.rollback();
     res.status(500).json({ error: err });
   }
 
