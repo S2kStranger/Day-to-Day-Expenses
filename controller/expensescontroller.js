@@ -71,12 +71,11 @@ exports.deleteexpense = async (req, res, next) => {
   try
   {
     const expenseid = req.params.e_id;
-    const expense = await  expenseTable.findOne({ where: { userId: req.user.id, id: expenseid } });
-    const reqRecord = await userTable.findOne({where:{id:req.user.id}});
-    var val =parseFloat(reqRecord.Total_Expense,10)-parseFloat(expense.amount,10);
-    const p1 = await reqRecord.update({Total_Expense:val});
-    const p2=await expense.destroy();
-    Promise.all([expense,reqRecord,p1,p2])
+    const expense = await  expenseTable.findAll({ where: { userId: req.user.id, id: expenseid } });
+    var val =Number(req.user.Total_Expense)-Number(expense[0].amount);
+    const p1=await userTable.update({Total_Expense:val},{where:{id:req.user.id}});
+    const p2=await expense[0].destroy();
+    Promise.all([expense,p1,p2])
       .then(() => {
         res.sendStatus(200);
       })

@@ -15,6 +15,9 @@ app.use(index);
 const purchase = require('./routes/purchase');
 app.use(purchase);
 
+const forgotPassword = require('./routes/forgotpassword');
+app.use(forgotPassword);
+
 const sequelize = require('./util/database');
 
 const usertable = require('./models/tableUser');

@@ -16,13 +16,13 @@ exports.loggingIn = (req,res,next) => {
     }
 
     const email = req.body.useremail;
-    User.findOne({where: {Email : email}})
+    User.findAll({where: {Email : email}})
     .then(record => {
 
-            bcrypt.compare(req.body.userpassword,record.Password,(err,pmatch) => {
+            bcrypt.compare(req.body.userpassword,record[0].Password,(err,pmatch) => {
             if(pmatch)
             {
-                res.status(200).json({record:record,token:generateAccessToken(record.id)});
+                res.status(200).json({record:record[0],token:generateAccessToken(record[0].id)});
             }
             else
             {
