@@ -12,7 +12,7 @@ exports.purchasePremium = (req, res, next) => {
     const amount = 5000;
     instance.orders.create({ amount, currency: "INR" }, (err, order) => {
       if (err) {
-        console.log("Error occuered");
+        console.log("Error occured");
         throw new Error(JSON.stringify(err));
       }
       req.user

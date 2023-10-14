@@ -23,12 +23,16 @@ const sequelize = require('./util/database');
 const usertable = require('./models/tableUser');
 const expensetable = require('./models/tableExpense');
 const orderstable = require('./models/orders');
+const pwdreqtable = require('./models/forgotpwdreq');
 
 usertable.hasMany(expensetable);
 expensetable.belongsTo(usertable);
 
 usertable.hasMany(orderstable);
 orderstable.belongsTo(usertable);
+
+usertable.hasMany(pwdreqtable);
+pwdreqtable.belongsTo(usertable);
 
 sequelize
     //.sync({force:true})

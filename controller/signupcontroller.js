@@ -11,7 +11,7 @@ exports.postUser = (req,res,next) => {
 
     try{
         bcrypt.hash(pwd,salt,(err,hash) => {
-            console.log("Hash",hash);
+            //console.log("Hash",hash);
            userTable.create({
                 Profile_name : req.body.pname,
                 Profile_purpose : req.body.ppurpose,
