@@ -16,6 +16,11 @@
     float: right;
 }
 
+#downloadexpense
+{
+    visibility:hidden ;
+}
+
 .btnpremium
 {
     margin-top: 1%;

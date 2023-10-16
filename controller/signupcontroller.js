@@ -18,7 +18,8 @@ exports.postUser = (req,res,next) => {
                 Email : req.body.pemail,
                 Password : hash,
                 Information : req.body.pinformation,
-                isPremium : req.body.isPremium
+                isPremium : req.body.isPremium,
+                Income:req.body.income
             }).then((result) => {
                 res.status(200).json({result:result});
             })

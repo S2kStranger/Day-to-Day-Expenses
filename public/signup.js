@@ -17,7 +17,8 @@ myform.addEventListener('submit', async(e) => {
             pemail : email.value,
             ppassword : password.value,
             pinformation : information.value,
-            isPremium : 'false'
+            isPremium : 'false',
+            income:0
         }
 
         const result = await axios.post("http://localhost:4000/postsignupdata",obj_data);

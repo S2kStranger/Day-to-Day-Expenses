@@ -47,7 +47,7 @@ exports.getallExpenses = async (req, res, next) => {
     const expenses = await  expenseTable.findAll({ where: { userId: req.user.id } });
     console.log(expenses);
     const texpense = await userTable.findAll({
-      attributes:['Total_Expense'],
+      attributes:['Total_Expense','Income'],
       where: { id: req.user.id }
     })
     console.log(texpense);
@@ -102,3 +102,31 @@ exports.deleteexpense = async (req, res, next) => {
   //     res.status(500).json({ error: err });
   //   });
 };
+
+
+exports.updateIncome = async (req,res,next) => {
+
+  try
+  {
+    const user = req.user;
+    user.Income = req.body.income;
+    await user.save();
+    res.sendStatus(200);
+  }catch(err)
+  {
+    res.status(500).json({ error: err });
+  }
+
+}
+
+exports.downloadFile = async (req,res,next) => {
+
+  try
+  {
+    console.log("File downloaded");
+    res.status(200).json({fileurl:"asfdakjsf",message:"File cant be downloaded"});
+  }catch(error)
+  {
+    res.status(500).json({err:error})
+  }
+}

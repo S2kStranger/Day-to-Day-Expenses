@@ -13,6 +13,8 @@ var lb = document.getElementById('leaderboard');
 var lbt_body = document.getElementById('lbtablebody');
 var tot_expense = document.getElementById('texpense');
 
+var btndownload = document.getElementById('downloadexpense');
+
 
 btnincome.addEventListener('click',(e) => 
 {
@@ -24,8 +26,22 @@ btnincome.addEventListener('click',(e) =>
   }
   else
   {
-    txtincome.disabled = true;
-    btnincome.innerHTML = "Edit";
+    const obj = {
+      income : txtincome.value
+    }
+
+    const token = localStorage.getItem('token');
+    axios.post("http://localhost:4000/updateIncome",obj,{headers:{"Authorization":token}})
+      .then(() => {
+        console.log("success");
+        alert("Income updated successfully to INR "+obj.income);
+        txtincome.disabled = true;
+        btnincome.innerHTML = "Edit";
+      })
+      .catch(err => {
+        alert("Something went wrong, "+err)
+      })
+
   }
 })
 
@@ -46,6 +62,7 @@ window.addEventListener('DOMContentLoaded',async (e) => {
     const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
     
      tot_expense.value = result.data.totexpense[0].Total_Expense;
+     txtincome.value = result.data.totexpense[0].Income;
     
     for(var i =0;i<result.data.allexpenses.length;i++)
         {
@@ -64,6 +81,7 @@ async function premiumFeature()
 {
   console.log("Calling premium feature");
   lb.style.visibility='visible';
+  btndownload.style.visibility='visible';
     const lbdata = await axios.get("http://localhost:4000/account/premium/getfeature");
     console.log("first data "+ lbdata.data.lbobj);
     for(var i=0;i<lbdata.data.lbobj.length;i++)
@@ -152,6 +170,29 @@ function addInTable(obj) {
   })
 
 
+}
+
+
+function download()
+{
+  const token = localStorage.getItem('token');
+  axios.get("http://localhost:4000/user/download",{headers:{"Authorization":token}})
+    .then(response => {
+      if(response.status==200)
+      {
+        var a = document.createElement('a');
+        a.href=response.data.fileurl;
+        a.download=myexpense.csv;
+        a.click();
+      }
+      else
+      {
+        throw new Error(response.data.message);
+      }
+    })
+    .catch(err => {
+      console.log("Something went wrong" + err);
+    })
 }
 
 myform.addEventListener("submit", async (e) => {
