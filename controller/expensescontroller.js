@@ -3,6 +3,8 @@ const router = express.Router();
 const expenseTable = require("../models/tableExpense");
 const userTable = require("../models/tableUser");
 const sequelize = require("../util/database");
+const linkTable = require("../models/downloadLink");
+
 
 exports.postExpense = async (req, res, next) => {
 
@@ -119,14 +121,65 @@ exports.updateIncome = async (req,res,next) => {
 
 }
 
+//--------------------------------------------------------
+// code to upload file on s3
+const userServices = require('../services/userservices');
+const AWS = require('aws-sdk');
+const S3Services = require('../services/S3services');
+const tableLink = require('../models/downloadLink');
+
+function saveLink(userid,fileurl)
+{
+  tableLink.create({
+    link : fileurl,
+    userId : userid
+  }).then((result) => {
+    console.log("Link saved",result);
+  })
+  .catch((err) => {
+    console.log("Link is not saved", err);
+  })
+}
+
 exports.downloadFile = async (req,res,next) => {
 
   try
   {
-    console.log("File downloaded");
-    res.status(200).json({fileurl:"asfdakjsf",message:"File cant be downloaded"});
+    console.log("Executing download expense part");
+    const user = req.user;
+    if(user.isPremium)
+    {
+      const userId = req.user.id;
+
+      const expenses = await userServices.getExpenses(req);
+      console.log(expenses);
+      const stringifyExpenses = JSON.stringify(expenses);
+      console.log(stringifyExpenses);
+      const filename = `Expense${userId}/${new Date()}.txt`;
+      const fileurl = await S3Services.uploadToS3(stringifyExpenses,filename);
+      console.log("Location is: ",fileurl);
+      saveLink(userId,fileurl);
+      res.status(200).json({fileurl, success : true});
+    }
+    else
+    {
+      res.status(401).json({message:"File cant be downloaded"});
+    }
+    
   }catch(error)
   {
-    res.status(500).json({err:error})
+    res.status(500).json({err:error,success: false,fileurl:''})
+  }
+}
+
+exports.getLinks = async (req,res,next) => {
+  try
+  {
+    const userid = req.user.id;
+    const links = await linkTable.findAll({where:{userId : userid}});
+    res.status(200).json({result : links});
+  }catch(err)
+  {
+    res.status(500).json({err:err});
   }
 }

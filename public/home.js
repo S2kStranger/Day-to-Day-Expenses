@@ -15,6 +15,8 @@ var tot_expense = document.getElementById('texpense');
 
 var btndownload = document.getElementById('downloadexpense');
 
+var tblLink = document.getElementById('downloadLinkTable');
+
 
 btnincome.addEventListener('click',(e) => 
 {
@@ -56,7 +58,6 @@ window.addEventListener('DOMContentLoaded',async (e) => {
     {
       btnpremium.innerHTML = "Premium User";
       btnpremium.disabled=true;
-      
       premiumFeature();
     }
     const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
@@ -64,15 +65,22 @@ window.addEventListener('DOMContentLoaded',async (e) => {
      tot_expense.value = result.data.totexpense[0].Total_Expense;
      txtincome.value = result.data.totexpense[0].Income;
     
-    for(var i =0;i<result.data.allexpenses.length;i++)
+        for(var i =0;i<result.data.allexpenses.length;i++)
         {
             addInTable(result.data.allexpenses[i]);
+        }
+
+        const result_link = await axios.get("http://localhost:4000/account/getdownloadLinks",{headers:{"Authorization":token}});
+        console.log(result_link.data.result);
+        const linkArr = result_link.data.result;
+        for(var i=0;i<linkArr.length;i++)
+        {
+          addLinkInTable(linkArr[i],i+1);
         }
   }catch(error){
         document.body.innerHTML = document.body.innerHTML+'<h4>Error in fetching data</h4>';
         console.log(error);
   }
-  
 })
 
 
@@ -81,7 +89,6 @@ async function premiumFeature()
 {
   console.log("Calling premium feature");
   lb.style.visibility='visible';
-  btndownload.style.visibility='visible';
     const lbdata = await axios.get("http://localhost:4000/account/premium/getfeature");
     console.log("first data "+ lbdata.data.lbobj);
     for(var i=0;i<lbdata.data.lbobj.length;i++)
@@ -168,22 +175,44 @@ function addInTable(obj) {
       })
 
   })
+}
+
+function addLinkInTable(linkRow,i)
+{
+  var tr = document.createElement("tr");
+  tblLink.appendChild(tr);
+
+  var th_number = document.createElement('th');
+  th_number.appendChild(document.createTextNode(i));
+  tr.appendChild(th_number);
+
+  var td_date = document.createElement('td');
+  td_date.appendChild(document.createTextNode(linkRow.createdAt));
+  tr.appendChild(td_date);
 
 
+  var td_link = document.createElement('td');
+  var a = document.createElement('a');
+  var linkText = document.createTextNode('File.txt');
+  a.appendChild(linkText);
+  a.href = linkRow.link;
+  td_link.appendChild(a);
+  tr.appendChild(td_link);
 }
 
 
 function download()
 {
   const token = localStorage.getItem('token');
-  axios.get("http://localhost:4000/user/download",{headers:{"Authorization":token}})
+  axios.get("http://localhost:4000/account/download",{headers:{"Authorization":token}})
     .then(response => {
       if(response.status==200)
       {
         var a = document.createElement('a');
         a.href=response.data.fileurl;
-        a.download=myexpense.csv;
+        a.download='myexpense.csv';
         a.click();
+        location.reload();
       }
       else
       {

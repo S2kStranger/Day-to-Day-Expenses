@@ -12,11 +12,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 const index = require('./routes/index');
 app.use(index);
 
+const expense = require('./routes/expense');
+app.use(expense);
+
 const purchase = require('./routes/purchase');
 app.use(purchase);
 
 const forgotPassword = require('./routes/forgotpassword');
 app.use(forgotPassword);
+
+
 
 const sequelize = require('./util/database');
 
@@ -24,6 +29,7 @@ const usertable = require('./models/tableUser');
 const expensetable = require('./models/tableExpense');
 const orderstable = require('./models/orders');
 const pwdreqtable = require('./models/forgotpwdreq');
+const downloadlink = require('./models/downloadLink');
 
 usertable.hasMany(expensetable);
 expensetable.belongsTo(usertable);
@@ -33,6 +39,9 @@ orderstable.belongsTo(usertable);
 
 usertable.hasMany(pwdreqtable);
 pwdreqtable.belongsTo(usertable);
+
+usertable.hasMany(downloadlink);
+downloadlink.belongsTo(usertable);
 
 sequelize
     //.sync({force:true})

@@ -19,90 +19,97 @@
     <div class="btnpremium">
         <button class="btn btn-dark btn-md " id="premium" type="">Buy Premium</button><br><br>
         <button onclick="download()" class="btn btn-dark btn-md " id="downloadexpense">Download Expense</button>
-    </div>
-    
-        <div class="middlediv">
-            <form id="myform" class="formdiv col-md-6" >
-    
-                <div class="form-row">
-                    <div class="form-group col">
-                        <label for="">Expense Amount(INR)</label>
-                        <input type="text" class="form-control" id="expenseamount" placeholder="Expense Amount" required>
-                    </div>
-                    <div class="form-group col">
-                        <label for="inputState">Category</label>
-                        <select id="category" class="form-control" require=\ >
-                            <option selected>EMI</option>
-                            <option>Rent</option>
-                            <option>Fuel</option>
-                            <option>Grocery</option>
-                            <option>Shopping</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col">
-                        <label for="">Description:</label><br>
-                        <textarea name="" id="description" cols="50" rows="3" class="form-control"></textarea>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <button type="submit" class="btn btn-info btnaddexpense">Add Expense</button>
-                </div>
-            </form>
+        <br> <br>
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Downloaded Files</th>
+                </tr>
+            </thead>
+            <tbody id="downloadLinkTable">
 
-            
-            <div class="leaderboard col-md-6" id="leaderboard">
-                <label for=""><h4><u>Leaderboard(Only for Premium User)</u></h4></label>
-                <table class="table table-hover tableleaderboard" id="lbtable">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th> 
-                            <th scope="col">Total Expense(INR)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lbtablebody">
-                        
-                    </tbody>
-                </table>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="middlediv">
+        <form id="myform" class="formdiv col-md-6">
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="">Expense Amount(INR)</label>
+                    <input type="text" class="form-control" id="expenseamount" placeholder="Expense Amount" required>
+                </div>
+                <div class="form-group col">
+                    <label for="inputState">Category</label>
+                    <select id="category" class="form-control" require=\>
+                        <option selected>EMI</option>
+                        <option>Rent</option>
+                        <option>Fuel</option>
+                        <option>Grocery</option>
+                        <option>Shopping</option>
+                    </select>
+                </div>
             </div>
-                
-            
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="">Description:</label><br>
+                    <textarea name="" id="description" cols="50" rows="3" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="btn btn-info btnaddexpense">Add Expense</button>
+            </div>
+        </form>
+
+
+        <div class="leaderboard col-md-4" id="leaderboard">
+            <label for="">
+                <h4><u>Leaderboard(Only for Premium User)</u></h4>
+            </label>
+            <table class="table table-hover tableleaderboard table-sm" id="lbtable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Total Expense(INR)</th>
+                    </tr>
+                </thead>
+                <tbody id="lbtablebody">
+
+                </tbody>
+            </table>
         </div>
 
-        
-
-    
-
-
-
-    <div class="salarypart">
+    </div>
+    <div class="salarypart" style="width: 65%;">
         <label for="">
             <h5>Total income:</h5>
         </label>
-        <button class="btneditincome btn-light" id="btn_income" >Edit</button>
+        <button class="btneditincome btn-light" id="btn_income">Edit</button>
         <input type="text" value="0" class="incometext" disabled id="income">
         <label for="" style="float: right; padding-top: 3.7px; padding-right: 5px;">
             <h5>INR</h5>
         </label>
     </div>
 
-    <table class="table table-striped" id="table">
+    <table class="table table-striped" id="table" style="width: 65%;">
         <thead>
             <tr>
-                <th scope="col">Category</th> 
+                <th scope="col">Category</th>
                 <th scope="col">Expense Amount</th>
                 <th scope="col">Description</th>
                 <th scope="col"></th>
             </tr>
         </thead>
         <tbody id="tablebody">
-            
+
         </tbody>
     </table>
 
-    <div class="total_expense salarypart">
+    <div class="total_expense salarypart" style="width: 65%;">
         <label for="">
             <h5>Total Expense: INR</h5>
         </label>
