@@ -17,6 +17,13 @@ var btndownload = document.getElementById('downloadexpense');
 
 var tblLink = document.getElementById('downloadLinkTable');
 
+const pageNumbers = document.querySelector(".pageNumbers");
+const prevButton = document.getElementById("prev");
+const nextButton = document.getElementById("next");
+let currentPageForDownloadLink = 1;
+
+var total_downladedLinks;
+
 
 btnincome.addEventListener('click',(e) => 
 {
@@ -52,6 +59,8 @@ window.addEventListener('DOMContentLoaded',async (e) => {
   e.preventDefault();
   try
   {
+    total_downladedLinks=0;
+    //console.log("Downladed links are ",total_downladedLinks);
     const token = localStorage.getItem("token");
     const premiumUser = localStorage.getItem("isPremium");
     if(premiumUser=="true")
@@ -73,15 +82,115 @@ window.addEventListener('DOMContentLoaded',async (e) => {
         const result_link = await axios.get("http://localhost:4000/account/getdownloadLinks",{headers:{"Authorization":token}});
         console.log(result_link.data.result);
         const linkArr = result_link.data.result;
+        
         for(var i=0;i<linkArr.length;i++)
         {
           addLinkInTable(linkArr[i],i+1);
         }
+        pagination(linkArr,5);
   }catch(error){
         document.body.innerHTML = document.body.innerHTML+'<h4>Error in fetching data</h4>';
         console.log(error);
   }
 })
+
+
+
+function pagination(arr,recordsPerPage)
+{
+  var arrLength = arr.length;
+  numberOfButtons = Math.ceil(arrLength/recordsPerPage);
+  generatePaginationButtons(numberOfButtons);
+  setCurrentPage(currentPageForDownloadLink,recordsPerPage,numberOfButtons);
+  prevButton.addEventListener('click',() => {
+      setCurrentPage(currentPageForDownloadLink-1,recordsPerPage,numberOfButtons)
+  });
+  nextButton.addEventListener('click',() => {
+    setCurrentPage(currentPageForDownloadLink+1,recordsPerPage,numberOfButtons)
+});
+const btnList = document.querySelectorAll('.pageNumberList');
+btnList.forEach((button) => {
+  const pageIndex = Number(button.getAttribute('index'));
+  if(pageIndex)
+  {
+    button.addEventListener('click',() => {
+      setCurrentPage(pageIndex,recordsPerPage,numberOfButtons);
+    })
+  }
+})
+
+}
+
+function generatePaginationButtons(numberOfButtons)
+{
+  for(var i=1;i<=numberOfButtons;i++)
+  {
+    getPageNumber(i);
+  }
+}
+
+function getPageNumber(i)
+{
+  const pageNumber = document.createElement('a');
+  pageNumber.innerText = i;
+  pageNumber.setAttribute('href','#');
+  pageNumber.setAttribute('index',i);
+  pageNumber.classList.add('pageNumberList');
+  pageNumbers.appendChild(pageNumber);
+  pageNumber.addEventListener('click',() => {
+    setCurrentPage(pageIndex,recordsPerPage,numberOfButtons);
+  })
+}
+
+const disableButton = (button) => {
+  button.classList.add('disabled');
+  button.setAttribute('disabled',true);
+}
+
+const enableButton = (button) => {
+  button.classList.remove('disabled');
+  button.removeAttribute('disabled');
+}
+
+const controlButtonStatus = (pageCount) => {
+  if(currentPageForDownloadLink == 1)
+    disableButton(prevButton);
+  else
+    enableButton(prevButton);
+
+    if(currentPageForDownloadLink == pageCount)
+      disableButton(nextButton);
+    else
+      enableButton(nextButton);
+}
+
+const handleActivePageNumber = () => {
+  document.querySelectorAll('.pageNumberList').forEach((button) => {
+    button.classList.remove('active');
+    const pageIndex = Number(button.getAttribute('index'));
+    if(pageIndex == currentPageForDownloadLink)
+      button.classList.add('active');
+  });
+}
+
+const setCurrentPage = (pageNum,contentLimit,pageCount) => {
+  currentPageForDownloadLink = pageNum;
+  handleActivePageNumber();
+  controlButtonStatus(pageCount);
+
+  const prevRange = (pageNum-1) * contentLimit;
+  const currRange = pageNum * contentLimit;
+
+  const listRows = document.querySelectorAll('.linksRow');
+  listRows.forEach((item,index) => {
+    console.log("Item is ",item);
+    item.classList.add('hidden');
+    if(index>=prevRange && index<currRange){
+      item.classList.remove('hidden');
+    }
+  })
+
+}
 
 
 //adding premium feature
@@ -180,6 +289,7 @@ function addInTable(obj) {
 function addLinkInTable(linkRow,i)
 {
   var tr = document.createElement("tr");
+  tr.classList.add('linksRow');
   tblLink.appendChild(tr);
 
   var th_number = document.createElement('th');
@@ -198,6 +308,8 @@ function addLinkInTable(linkRow,i)
   a.href = linkRow.link;
   td_link.appendChild(a);
   tr.appendChild(td_link);
+  total_downladedLinks++;
+  //console.log("Downladed links are ",total_downladedLinks);
 }
 
 
@@ -212,7 +324,8 @@ function download()
         a.href=response.data.fileurl;
         a.download='myexpense.csv';
         a.click();
-        location.reload();
+       // console.log("Saved LInk",response.data.savedLink);
+        addLinkInTable(response.data.savedLink,total_downladedLinks+1);
       }
       else
       {
@@ -223,6 +336,9 @@ function download()
       console.log("Something went wrong" + err);
     })
 }
+
+
+
 
 myform.addEventListener("submit", async (e) => {
   e.preventDefault();

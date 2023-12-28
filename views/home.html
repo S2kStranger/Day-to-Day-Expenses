@@ -17,9 +17,11 @@
     </div>
 
     <div class="btnpremium">
-        <button class="btn btn-dark btn-md " id="premium" type="">Buy Premium</button><br><br>
-        <button onclick="download()" class="btn btn-dark btn-md " id="downloadexpense">Download Expense</button>
-        <br> <br>
+        <div class="permiumButton_container" style="display: flex; margin-right: 2%;">
+            <button style=" width: 50%; height: 50%;" class="btn btn-dark btn-md " id="premium" type="">Buy Premium</button><br><br>
+            <button style="margin-left: 5%;  width: 70%; height: 50%;" onclick="download()" class="btn btn-dark btn-md " id="downloadexpense">Download Expense</button>
+        </div>
+        
         <table class="table table-bordered table-sm">
             <thead>
                 <tr>
@@ -32,6 +34,20 @@
 
             </tbody>
         </table>
+
+        <div class="pagination-container">
+            <div class="pagination">
+                <button class="control" id="prev" title="Previous page">
+                    < Prev
+                </button>
+                <div class="pageNumbers">
+                    <!---Page Numbers-->
+                </div>
+                <button class="control" id="next" title="Next page">
+                    Next >
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="middlediv">

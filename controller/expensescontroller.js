@@ -128,17 +128,31 @@ const AWS = require('aws-sdk');
 const S3Services = require('../services/S3services');
 const tableLink = require('../models/downloadLink');
 
-function saveLink(userid,fileurl)
+async function saveLink(userid,fileurl)
 {
-  tableLink.create({
-    link : fileurl,
-    userId : userid
-  }).then((result) => {
-    console.log("Link saved",result);
-  })
-  .catch((err) => {
+  try
+  {
+    const result = await tableLink.create({
+      link : fileurl,
+      userId : userid
+    });
+    return result;
+  }
+  catch(error)
+  {
     console.log("Link is not saved", err);
-  })
+    return error;
+  }
+  // tableLink.create({
+  //   link : fileurl,
+  //   userId : userid
+  // }).then((result) => {
+  //   console.log("Link saved",result);
+  //   return result;
+  // })
+  // .catch((err) => {
+  //   console.log("Link is not saved", err);
+  // })
 }
 
 exports.downloadFile = async (req,res,next) => {
@@ -147,8 +161,6 @@ exports.downloadFile = async (req,res,next) => {
   {
     console.log("Executing download expense part");
     const user = req.user;
-    if(user.isPremium)
-    {
       const userId = req.user.id;
 
       const expenses = await userServices.getExpenses(req);
@@ -158,17 +170,23 @@ exports.downloadFile = async (req,res,next) => {
       const filename = `Expense${userId}/${new Date()}.txt`;
       const fileurl = await S3Services.uploadToS3(stringifyExpenses,filename);
       console.log("Location is: ",fileurl);
-      saveLink(userId,fileurl);
-      res.status(200).json({fileurl, success : true});
-    }
-    else
-    {
-      res.status(401).json({message:"File cant be downloaded"});
-    }
+      const savedLink =  await saveLink(userId,fileurl);
+      //console.log("---------------------------link details",savedLink);
+      Promise.all([expenses,fileurl,savedLink])
+      .then(() => {
+        //console.log("---------------------------link details",savedLink);
+        res.status(200).json({fileurl, success : true, savedLink});
+      })
+      .catch((err) => {
+        res.status(500).json({error: err});
+      })
+      
+      // res.status(200).json({fileurl, success : true, savedLink});
+    
     
   }catch(error)
   {
-    res.status(500).json({err:error,success: false,fileurl:''})
+    res.status(500).json({err:error,success: false,fileurl:'',message:"File cant be downloaded"})
   }
 }
 
