@@ -30,37 +30,9 @@
     width: 50%;
 }
 
-.pagination-container{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    bottom: 22px;
-    width: 100%;
-}
-
-.pagination{
-    width: 100%;
-    border-radius: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(68, 137, 137);
-    margin-bottom: 10px;
-}
-
-.pagination a {
-    padding:  10px;
-    font-weight: 500;
-    text-decoration: none;
-    font-size: 20px;
-    color: rgb(155,155,238);
-    border-radius: 50%;
-    transition: 0.5s ease-in-out;
-}
 
 .control {
     font-size: 20px;
-    font-weight: bold;
     background-color: transparent;
     color: rgb(200,200,239);
     border: none;
@@ -74,18 +46,10 @@
     color: rgba(12,16,41,0.5);
     cursor: default;
 }
-.control:not(.disabled):hover,.pageNumbers a:hover{
-    background-color: rgb(9,9,75);
+.control:not(.disabled):hover{
+    background-color: rgb(163, 163, 163);
     color: white;
 }
-a.active{
-    background-color: rgb(9,9,75);
-    color: white;
-}
-.hidden{
-    display: none;
-}
-
 
 .salarypart
 {
@@ -99,12 +63,14 @@ a.active{
 {
     width: 60%;
 }
+
 .incometext
 {
     margin-right: 1%;
     padding-right: 10%;
     float: right;
 }
+
 .btneditincome
 {
     margin-right: 1.5%;
@@ -135,9 +101,6 @@ a.active{
     visibility: hidden;
     
 }
-
-
-
 
 .btnaddexpense
 {

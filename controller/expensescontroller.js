@@ -201,3 +201,37 @@ exports.getLinks = async (req,res,next) => {
     res.status(500).json({err:err});
   }
 }
+
+
+exports.getPagination = async (req,res,next) => {
+  try
+  {
+    //console.log("Performing pagination---------------------------------------------------------");
+    const userid = req.user.id;
+    const pageSize = parseInt(req.params.rpp);
+    const pageNumber = parseInt(req.params.cp);
+    const rec = await linkTable.findAll({where: {userId: userid},
+      limit: pageSize,
+      offset: (pageNumber-1)*pageSize
+    })
+
+    const totalNumberOfLink = await linkTable.count({
+      where:{userId:userid}
+    })
+
+    Promise.all([res,totalNumberOfLink])
+    .then(() => {
+      //console.log("Pagination Result",totalNumberOfLink);
+      res.status(200).json({record:rec, count: totalNumberOfLink});
+    })
+    .catch((err) => {
+      res.status(500).json({error:err});
+    })
+    
+  }
+  catch(err)
+  {
+    res.status(500).json({error:err});
+  }
+  
+}

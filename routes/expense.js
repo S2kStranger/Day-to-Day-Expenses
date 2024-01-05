@@ -18,5 +18,7 @@ router.get("/account/download",userauthorization.authorization,expenseController
 
 router.get("/account/getdownloadLinks",userauthorization.authorization,expenseController.getLinks);
 
+router.get('/account/pagination/:rpp/:cp',userauthorization.authorization,expenseController.getPagination);
+
 
 module.exports=router;

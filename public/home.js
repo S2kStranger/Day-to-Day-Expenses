@@ -16,13 +16,14 @@ var tot_expense = document.getElementById('texpense');
 var btndownload = document.getElementById('downloadexpense');
 
 var tblLink = document.getElementById('downloadLinkTable');
-
-const pageNumbers = document.querySelector(".pageNumbers");
 const prevButton = document.getElementById("prev");
 const nextButton = document.getElementById("next");
+const rowsPerPage = document.getElementById('rowsPerPage');
 let currentPageForDownloadLink = 1;
+var labelTotalLinks = document.getElementById('labelfortotlinks');
 
-var total_downladedLinks;
+let total_no_of_links = 0;
+let total_no_of_pages = 0;
 
 
 btnincome.addEventListener('click',(e) => 
@@ -59,8 +60,6 @@ window.addEventListener('DOMContentLoaded',async (e) => {
   e.preventDefault();
   try
   {
-    total_downladedLinks=0;
-    //console.log("Downladed links are ",total_downladedLinks);
     const token = localStorage.getItem("token");
     const premiumUser = localStorage.getItem("isPremium");
     if(premiumUser=="true")
@@ -78,69 +77,52 @@ window.addEventListener('DOMContentLoaded',async (e) => {
         {
             addInTable(result.data.allexpenses[i]);
         }
-
-        const result_link = await axios.get("http://localhost:4000/account/getdownloadLinks",{headers:{"Authorization":token}});
-        console.log(result_link.data.result);
-        const linkArr = result_link.data.result;
-        
-        for(var i=0;i<linkArr.length;i++)
-        {
-          addLinkInTable(linkArr[i],i+1);
-        }
-        pagination(linkArr,5);
+        await fetchDownloadLinks(1);
   }catch(error){
         document.body.innerHTML = document.body.innerHTML+'<h4>Error in fetching data</h4>';
         console.log(error);
   }
 })
 
-
-
-function pagination(arr,recordsPerPage)
+async function fetchDownloadLinks(currentPage)
 {
-  var arrLength = arr.length;
-  numberOfButtons = Math.ceil(arrLength/recordsPerPage);
-  generatePaginationButtons(numberOfButtons);
-  setCurrentPage(currentPageForDownloadLink,recordsPerPage,numberOfButtons);
-  prevButton.addEventListener('click',() => {
-      setCurrentPage(currentPageForDownloadLink-1,recordsPerPage,numberOfButtons)
-  });
-  nextButton.addEventListener('click',() => {
-    setCurrentPage(currentPageForDownloadLink+1,recordsPerPage,numberOfButtons)
-});
-const btnList = document.querySelectorAll('.pageNumberList');
-btnList.forEach((button) => {
-  const pageIndex = Number(button.getAttribute('index'));
-  if(pageIndex)
-  {
-    button.addEventListener('click',() => {
-      setCurrentPage(pageIndex,recordsPerPage,numberOfButtons);
-    })
-  }
+    currentPageForDownloadLink = currentPage;
+    var rowsPP = document.getElementById('rowsPerPage').value;
+    console.log('selectedValue',rowsPP);
+    console.log("Selected page",currentPage);
+    const token = localStorage.getItem("token");
+    const result_link = await axios.get(`http://localhost:4000/account/pagination/${rowsPP}/${currentPage}`,{headers:{"Authorization":token}});
+    let totLink = result_link.data.count;
+    let sr = ((currentPage-1)*rowsPP )+1;
+    let er = (currentPage)*rowsPP;
+    if(er>totLink)
+      er=totLink;
+    labelTotalLinks.textContent = `${sr}-${er} of ${totLink}`;
+    while (tblLink.rows.length > 0) {
+      tblLink.deleteRow(0);
+    }
+    for(var i = 0;i<result_link.data.record.length;i++)
+    {
+        addLinkInTable(result_link.data.record[i],sr);
+        sr++;
+    }   
+    total_no_of_links = totLink;
+    total_no_of_pages = Math.ceil(totLink/rowsPP);
+    controlButtonStatus();
+}
+
+prevButton.addEventListener('click',(e) => {
+  e.preventDefault();
+  currentPageForDownloadLink--;
+  fetchDownloadLinks(currentPageForDownloadLink);
 })
 
-}
+nextButton.addEventListener('click',(e) => {
+  e.preventDefault();
+  currentPageForDownloadLink++;
+  fetchDownloadLinks(currentPageForDownloadLink);
+})
 
-function generatePaginationButtons(numberOfButtons)
-{
-  for(var i=1;i<=numberOfButtons;i++)
-  {
-    getPageNumber(i);
-  }
-}
-
-function getPageNumber(i)
-{
-  const pageNumber = document.createElement('a');
-  pageNumber.innerText = i;
-  pageNumber.setAttribute('href','#');
-  pageNumber.setAttribute('index',i);
-  pageNumber.classList.add('pageNumberList');
-  pageNumbers.appendChild(pageNumber);
-  pageNumber.addEventListener('click',() => {
-    setCurrentPage(pageIndex,recordsPerPage,numberOfButtons);
-  })
-}
 
 const disableButton = (button) => {
   button.classList.add('disabled');
@@ -152,46 +134,17 @@ const enableButton = (button) => {
   button.removeAttribute('disabled');
 }
 
-const controlButtonStatus = (pageCount) => {
+const controlButtonStatus = () => {
   if(currentPageForDownloadLink == 1)
     disableButton(prevButton);
   else
     enableButton(prevButton);
 
-    if(currentPageForDownloadLink == pageCount)
+    if(currentPageForDownloadLink == total_no_of_pages)
       disableButton(nextButton);
     else
       enableButton(nextButton);
 }
-
-const handleActivePageNumber = () => {
-  document.querySelectorAll('.pageNumberList').forEach((button) => {
-    button.classList.remove('active');
-    const pageIndex = Number(button.getAttribute('index'));
-    if(pageIndex == currentPageForDownloadLink)
-      button.classList.add('active');
-  });
-}
-
-const setCurrentPage = (pageNum,contentLimit,pageCount) => {
-  currentPageForDownloadLink = pageNum;
-  handleActivePageNumber();
-  controlButtonStatus(pageCount);
-
-  const prevRange = (pageNum-1) * contentLimit;
-  const currRange = pageNum * contentLimit;
-
-  const listRows = document.querySelectorAll('.linksRow');
-  listRows.forEach((item,index) => {
-    console.log("Item is ",item);
-    item.classList.add('hidden');
-    if(index>=prevRange && index<currRange){
-      item.classList.remove('hidden');
-    }
-  })
-
-}
-
 
 //adding premium feature
 async function premiumFeature()
@@ -308,8 +261,7 @@ function addLinkInTable(linkRow,i)
   a.href = linkRow.link;
   td_link.appendChild(a);
   tr.appendChild(td_link);
-  total_downladedLinks++;
-  //console.log("Downladed links are ",total_downladedLinks);
+  total_no_of_links++;
 }
 
 
@@ -325,7 +277,7 @@ function download()
         a.download='myexpense.csv';
         a.click();
        // console.log("Saved LInk",response.data.savedLink);
-        addLinkInTable(response.data.savedLink,total_downladedLinks+1);
+        addLinkInTable(response.data.savedLink,total_no_of_links+1);
       }
       else
       {
@@ -403,23 +355,3 @@ btnpremium.onclick = async function(e)
     .catch((err) => {console.log(err)});
   })
 }
-
-
-
-
-
-
-// Example body of the table
-
-// <tr>
-//                 <td>Mark</td>
-//                 <td>Otto</td>
-//                 <td>@mdo</td>   
-//                 <td><button class="btn-dark">Delete</button></td>
-//             </tr>
-//             <tr>
-//                 <td>Jacob</td>
-//                 <td>Thornton</td>
-//                 <td>@fat</td>
-//                 <td><button class="btn-dark">Delete</button></td>
-//             </tr>

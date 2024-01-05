@@ -21,6 +21,31 @@
             <button style=" width: 50%; height: 50%;" class="btn btn-dark btn-md " id="premium" type="">Buy Premium</button><br><br>
             <button style="margin-left: 5%;  width: 70%; height: 50%;" onclick="download()" class="btn btn-dark btn-md " id="downloadexpense">Download Expense</button>
         </div>
+
+       <div class="rowsPP">
+        <label for="">Rows Per Page: </label>
+        <select name="Number Of Rows Per Page" id="rowsPerPage" onchange="fetchDownloadLinks(1)">
+            <option value="5">05</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="45">45</option>
+            <option value="50">50</option>
+        </select>
+        &nbsp;
+
+        <label for="" id="labelfortotlinks"></label>
+            &nbsp;
+                <button class="control" id="prev" title="Previous page">
+                    <
+                </button>
+                <button class="control" id="next" title="Next page">
+                    >
+                </button>
+       </div>
         
         <table class="table table-bordered table-sm">
             <thead>
@@ -35,19 +60,7 @@
             </tbody>
         </table>
 
-        <div class="pagination-container">
-            <div class="pagination">
-                <button class="control" id="prev" title="Previous page">
-                    < Prev
-                </button>
-                <div class="pageNumbers">
-                    <!---Page Numbers-->
-                </div>
-                <button class="control" id="next" title="Next page">
-                    Next >
-                </button>
-            </div>
-        </div>
+        
     </div>
 
     <div class="middlediv">
