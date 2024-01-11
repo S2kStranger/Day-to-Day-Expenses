@@ -1,11 +1,16 @@
 const express = require('express');
 const app = express();
-
+const fs = require('fs');
 const path = require('path');
-
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({extended: false}));
 
+const compression = require('compression');
+app.use(compression());
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'), {flags: 'a'});
+const morgan = require('morgan');
+app.use(morgan('combined',{stream: accessLogStream}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 

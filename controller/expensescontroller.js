@@ -47,12 +47,12 @@ exports.getallExpenses = async (req, res, next) => {
   try
   {
     const expenses = await  expenseTable.findAll({ where: { userId: req.user.id } });
-    console.log(expenses);
+  //  console.log(expenses);
     const texpense = await userTable.findAll({
       attributes:['Total_Expense','Income'],
       where: { id: req.user.id }
     })
-    console.log(texpense);
+   // console.log(texpense);
     res.status(200).json({ allexpenses: expenses , totexpense: texpense});
   }catch(err)
   {
@@ -159,17 +159,17 @@ exports.downloadFile = async (req,res,next) => {
 
   try
   {
-    console.log("Executing download expense part");
+   // console.log("Executing download expense part");
     const user = req.user;
       const userId = req.user.id;
 
       const expenses = await userServices.getExpenses(req);
-      console.log(expenses);
+     // console.log(expenses);
       const stringifyExpenses = JSON.stringify(expenses);
-      console.log(stringifyExpenses);
+     // console.log(stringifyExpenses);
       const filename = `Expense${userId}/${new Date()}.txt`;
       const fileurl = await S3Services.uploadToS3(stringifyExpenses,filename);
-      console.log("Location is: ",fileurl);
+    //  console.log("Location is: ",fileurl);
       const savedLink =  await saveLink(userId,fileurl);
       //console.log("---------------------------link details",savedLink);
       Promise.all([expenses,fileurl,savedLink])

@@ -88,8 +88,8 @@ async function fetchDownloadLinks(currentPage)
 {
     currentPageForDownloadLink = currentPage;
     var rowsPP = document.getElementById('rowsPerPage').value;
-    console.log('selectedValue',rowsPP);
-    console.log("Selected page",currentPage);
+    // console.log('selectedValue',rowsPP);
+    // console.log("Selected page",currentPage);
     const token = localStorage.getItem("token");
     const result_link = await axios.get(`http://localhost:4000/account/pagination/${rowsPP}/${currentPage}`,{headers:{"Authorization":token}});
     let totLink = result_link.data.count;
@@ -152,7 +152,7 @@ async function premiumFeature()
   console.log("Calling premium feature");
   lb.style.visibility='visible';
     const lbdata = await axios.get("http://localhost:4000/account/premium/getfeature");
-    console.log("first data "+ lbdata.data.lbobj);
+    //console.log("first data "+ lbdata.data.lbobj);
     for(var i=0;i<lbdata.data.lbobj.length;i++)
     {
       const record = lbdata.data.lbobj[i];
@@ -162,8 +162,8 @@ async function premiumFeature()
 
 function addInFeatureTable(record,i)
 {
-  console.log("Records fetched");
-  console.log(record);
+  // console.log("Records fetched");
+  // console.log(record);
   const pname = record.Profile_name;
   const texpense = record.Total_Expense==null?0:record.Total_Expense;
   var tr = document.createElement("tr");
@@ -233,7 +233,7 @@ function addInTable(obj) {
       })
       .catch(error => {
             document.body.innerHTML = document.body.innerHTML+'<h4>Something went wrong</h4>';
-            console.log(error);
+          //  console.log(error);
       })
 
   })

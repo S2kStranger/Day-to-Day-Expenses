@@ -17,7 +17,7 @@ exports.authorization = (req,res,next) => {
             .catch(err => { throw new error (err)});
     }catch(err)
     {
-        console.log(err);
+       // console.log(err);
         return res.status(401).json({success:false});
     }
 }

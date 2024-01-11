@@ -95,7 +95,7 @@ exports.getLeaderboard = async (req, res, next) => {
     // const [results, metadata] = await sequelize.query(
     //   "select daytodayexpense.users.id,Profile_name,userID,sum(amount) as total_expense from daytodayexpense.users LEFT JOIN daytodayexpense.expenses on daytodayexpense.users.id=daytodayexpense.expenses.userId group by daytodayexpense.users.id order by total_expense desc;"
     // );
-    console.log(results);
+    //console.log(results);
     res.status(200).json({ lbobj: results });
   } catch (err) {
     res.status(400).json({ message: err });

@@ -35,7 +35,7 @@ exports.sendLink = async(req, res, next) => {
     //generating uuid
     const uuid = require("uuid");
     const uniqueid = uuid.v4();
-    console.log("uniqueid", uniqueid);
+  //  console.log("uniqueid", uniqueid);
 
     //saving the request to the table
     const rec = await usertable.findOne({where:{Email:req.body.emailid}});
@@ -65,9 +65,9 @@ exports.sendLink = async(req, res, next) => {
     sendSmtpEmail.to = [{ email: "s2kkasera@gmail.com" }];
     apiInstance.sendTransacEmail(sendSmtpEmail).then(
       function (data) {
-        console.log(
-          "API called successfully. Returned data: " + JSON.stringify(data)
-        );
+        // console.log(
+        //   "API called successfully. Returned data: " + JSON.stringify(data)
+        // );
       },
       function (error) {
         console.error(error);

@@ -17,7 +17,7 @@ btnsendlink.addEventListener('click',async (e) => {
     {
         errortext.value = "User doesn't exist";
         myform.reset();
-        console.log(error);
+       // console.log(error);
     }
 })
 
