@@ -5,9 +5,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({extended: false}));
 
+//TO COMPRESS THE FILE
 const compression = require('compression');
 app.use(compression());
 
+//TO LOG THE DATA
 const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'), {flags: 'a'});
 const morgan = require('morgan');
 app.use(morgan('combined',{stream: accessLogStream}));
@@ -26,6 +28,7 @@ app.use(purchase);
 const forgotPassword = require('./routes/forgotpassword');
 app.use(forgotPassword);
 
+require("dotenv").config();
 
 
 const sequelize = require('./util/database');
@@ -49,8 +52,8 @@ usertable.hasMany(downloadlink);
 downloadlink.belongsTo(usertable);
 
 sequelize
-    //.sync({force:true})
-    .sync()
+     .sync({force:true})
+    //.sync()
     .then(result => {
         app.listen(4000);
         console.log(result);

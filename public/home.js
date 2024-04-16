@@ -88,8 +88,6 @@ async function fetchDownloadLinks(currentPage)
 {
     currentPageForDownloadLink = currentPage;
     var rowsPP = document.getElementById('rowsPerPage').value;
-    // console.log('selectedValue',rowsPP);
-    // console.log("Selected page",currentPage);
     const token = localStorage.getItem("token");
     const result_link = await axios.get(`http://localhost:4000/account/pagination/${rowsPP}/${currentPage}`,{headers:{"Authorization":token}});
     let totLink = result_link.data.count;

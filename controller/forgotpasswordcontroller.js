@@ -7,8 +7,6 @@ const pwdrequesttable = require("../models/forgotpwdreq");
 require("dotenv").config();
 const API_KEY = process.env.SIB_KEY;
 
-
-
 exports.checkEmail = (req,res,next) =>
 {
   const email = req.body.emailid;
