@@ -52,8 +52,8 @@ usertable.hasMany(downloadlink);
 downloadlink.belongsTo(usertable);
 
 sequelize
-     .sync({force:true})
-    //.sync()
+    // .sync({force:true})
+    .sync()
     .then(result => {
         app.listen(4000);
         console.log(result);
