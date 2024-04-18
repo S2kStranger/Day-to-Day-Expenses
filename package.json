@@ -10,7 +10,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.6.1",
-    "nodemailer": "^6.9.5",
+    "nodemailer": "^6.9.9",
     "razorpay": "^2.9.2",
     "sendinblue-api": "^1.0.8",
     "sib-api-v3-sdk": "^4.0.1",
