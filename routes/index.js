@@ -12,7 +12,7 @@ router.get('/',(req,res,next) => {
 })
 
 router.get('/signUp',(req,res,next) => {
-    res.sendFile(path.join(__dirname,'..','views','signup.html'));
+    res.sendFile(path.join(__dirname,'..','views','signUp.html'));
 })
 
 router.post('/postsignupdata',signUpcontroller.postUser);

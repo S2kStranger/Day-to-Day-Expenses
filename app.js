@@ -10,9 +10,9 @@ const compression = require('compression');
 app.use(compression());
 
 //TO LOG THE DATA
-const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'), {flags: 'a'});
-const morgan = require('morgan');
-app.use(morgan('combined',{stream: accessLogStream}));
+// const accessLogStream = fs.createWriteStream(path.join(__dirname,'access.log'), {flags: 'a'});
+// const morgan = require('morgan');
+// app.use(morgan('combined',{stream: accessLogStream}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
