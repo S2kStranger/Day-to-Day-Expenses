@@ -41,7 +41,7 @@ btnincome.addEventListener('click',(e) =>
     }
 
     const token = localStorage.getItem('token');
-    axios.post("http://localhost:4000/updateIncome",obj,{headers:{"Authorization":token}})
+    axios.post("http://44.220.158.244:4000/updateIncome",obj,{headers:{"Authorization":token}})
       .then(() => {
         console.log("success");
         alert("Income updated successfully to INR "+obj.income);
@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded',async (e) => {
       btnpremium.disabled=true;
       premiumFeature();
     }
-    const result = await axios.get("http://localhost:4000/account/getexpenses",{headers:{"Authorization":token}});
+    const result = await axios.get("http://44.220.158.244:4000/account/getexpenses",{headers:{"Authorization":token}});
     
      tot_expense.value = result.data.totexpense[0].Total_Expense;
      txtincome.value = result.data.totexpense[0].Income;
@@ -89,7 +89,7 @@ async function fetchDownloadLinks(currentPage)
     currentPageForDownloadLink = currentPage;
     var rowsPP = document.getElementById('rowsPerPage').value;
     const token = localStorage.getItem("token");
-    const result_link = await axios.get(`http://localhost:4000/account/pagination/${rowsPP}/${currentPage}`,{headers:{"Authorization":token}});
+    const result_link = await axios.get(`http://44.220.158.244:4000/account/pagination/${rowsPP}/${currentPage}`,{headers:{"Authorization":token}});
     let totLink = result_link.data.count;
     let sr = ((currentPage-1)*rowsPP )+1;
     let er = (currentPage)*rowsPP;
@@ -149,7 +149,7 @@ async function premiumFeature()
 {
   console.log("Calling premium feature");
   lb.style.visibility='visible';
-    const lbdata = await axios.get("http://localhost:4000/account/premium/getfeature");
+    const lbdata = await axios.get("http://44.220.158.244:4000/account/premium/getfeature");
     //console.log("first data "+ lbdata.data.lbobj);
     for(var i=0;i<lbdata.data.lbobj.length;i++)
     {
@@ -224,7 +224,7 @@ function addInTable(obj) {
     e.preventDefault();
 
     const token = localStorage.getItem('token');
-    axios.delete(`http://localhost:4000/account/deleteExpense/${expenseid}`,{headers:{"Authorization":token}})
+    axios.delete(`http://44.220.158.244:4000/account/deleteExpense/${expenseid}`,{headers:{"Authorization":token}})
       .then(result => {
         tr.remove();
         location.reload();
@@ -266,7 +266,7 @@ function addLinkInTable(linkRow,i)
 function download()
 {
   const token = localStorage.getItem('token');
-  axios.get("http://localhost:4000/account/download",{headers:{"Authorization":token}})
+  axios.get("http://44.220.158.244:4000/account/download",{headers:{"Authorization":token}})
     .then(response => {
       if(response.status==200)
       {
@@ -300,7 +300,7 @@ myform.addEventListener("submit", async (e) => {
     };
 
     const token = localStorage.getItem('token');
-    const newData = await axios.post("http://localhost:4000/postnewexpense",obj_data,{headers:{"Authorization":token}});
+    const newData = await axios.post("http://44.220.158.244:4000/postnewexpense",obj_data,{headers:{"Authorization":token}});
     const ret_data = newData.data.expensedata;
 
     //addInTable(ret_data);
@@ -324,14 +324,14 @@ btnlogout.addEventListener('click',(e) => {
 btnpremium.onclick = async function(e) 
 {
   const token = localStorage.getItem('token');
-  const response = await axios.get("http://localhost:4000/purchase/premium_membership",{headers:{"Authorization":token}});
+  const response = await axios.get("http://44.220.158.244:4000/purchase/premium_membership",{headers:{"Authorization":token}});
   
   var options = 
   {
     "key" : response.data.key_id,
     "order_id" : response.data.order.id,
     "handler" : async function(response) {
-      await axios.post('http://localhost:4000/purchase/updatetransactionstatus',{
+      await axios.post('http://44.220.158.244:4000/purchase/updatetransactionstatus',{
         order_id: options.order_id,
         payment_id : response.razorpay_payment_id},{headers : {"Authorization": token}})
         alert('You are a premium user now');
@@ -345,7 +345,7 @@ btnpremium.onclick = async function(e)
   e.preventDefault();
 
   rzp1.on('payment.failed',function(response) {
-    axios.post('http://localhost:4000/purchase/failedtransaction',{
+    axios.post('http://44.220.158.244:4000/purchase/failedtransaction',{
       order_id: options.order_id})
     .then(() => {
       alert("Payment could not process, try again!");

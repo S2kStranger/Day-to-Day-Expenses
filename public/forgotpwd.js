@@ -9,7 +9,7 @@ btnsendlink.addEventListener('click',async (e) => {
         const obj = {
             emailid : email.value
         }
-        const result = await axios.post("http://localhost:4000/password/forgotpassword",obj);
+        const result = await axios.post("http://44.220.158.244:4000/password/forgotpassword",obj);
         myform.reset();
         alert(`Reset password link has been sent to your email ID: ${obj.emailid}`);
 

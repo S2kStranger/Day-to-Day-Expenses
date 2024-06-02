@@ -16,6 +16,10 @@ app.use(compression());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/check',()=>{
+    console.log("Connected");
+});
+
 const index = require('./routes/index');
 app.use(index);
 
