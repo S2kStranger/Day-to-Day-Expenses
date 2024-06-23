@@ -16,9 +16,9 @@ app.use(compression());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/check',()=>{
-    console.log("Connected");
-});
+const cors = require('cors');
+app.use(cors());
+
 
 const index = require('./routes/index');
 app.use(index);
@@ -56,8 +56,8 @@ usertable.hasMany(downloadlink);
 downloadlink.belongsTo(usertable);
 
 sequelize
-     .sync({force:true})
-    //.sync()
+     //.sync({force:true})
+    .sync()
     .then(result => {
         app.listen(4000);
         console.log(result);
