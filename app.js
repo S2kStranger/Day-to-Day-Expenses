@@ -15,7 +15,7 @@ app.use(compression());
 // app.use(morgan('combined',{stream: accessLogStream}));
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+//installed cors
 const cors = require('cors');
 app.use(cors());
 
