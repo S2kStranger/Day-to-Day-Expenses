@@ -20,7 +20,7 @@ myform.addEventListener('submit',async (e) => {
             confirmpwd : cpwd.value,
             uid : uuid
         }
-         const result = await axios.post("http://3.82.37.119:4000/password/submitpassword",obj);
+         const result = await axios.post("http://18.207.168.151:4000/password/submitpassword",obj);
          alert("Password successfully changed, click OK to signIn");
          location.replace("/signIn");
 
