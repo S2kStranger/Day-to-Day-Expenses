@@ -21,7 +21,7 @@ myform.addEventListener('submit', async(e) => {
             income:0
         }
 
-        const result = await axios.post("http://18.207.168.151:4000/postsignupdata",obj_data);
+        const result = await axios.post("http://18.207.151.81:4000/postsignupdata",obj_data);
         errortext.value=""; 
         if(result)
         {

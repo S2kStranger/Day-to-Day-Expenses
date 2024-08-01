@@ -58,7 +58,7 @@ exports.sendLink = async(req, res, next) => {
 
     sendSmtpEmail.subject = "Reset password";
     sendSmtpEmail.htmlContent =
-      `<html><body><h2>We have received a reset password request from your account. If it is not you please contact our customer service as soon as possible.</h2><p>Click on the given link to reset the password</p><a href=http://18.207.168.151:4000/password/resetpassword/${uniqueid} style="color: black;"><button>Reset Password</button></a></body></html>`;
+      `<html><body><h2>We have received a reset password request from your account. If it is not you please contact our customer service as soon as possible.</h2><p>Click on the given link to reset the password</p><a href=http://18.207.151.81:4000/password/resetpassword/${uniqueid} style="color: black;"><button>Reset Password</button></a></body></html>`;
     sendSmtpEmail.sender = { name: "Kaseras", email: "stranger@kaseras.com" };
     sendSmtpEmail.to = [{ email: "s2kkasera@gmail.com" }];
     apiInstance.sendTransacEmail(sendSmtpEmail).then(
